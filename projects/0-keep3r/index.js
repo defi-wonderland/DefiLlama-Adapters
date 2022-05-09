@@ -7,7 +7,7 @@
  const BigNumber = require("bignumber.js");
  const web3 = require("../config/web3.js");
  const abis = require("../config/abis.js").abis;
- const registry = require('./registry.js')
+ const registry = require('./registry.js').registry
 
  const sdk = require("@defillama/sdk");
  const {
@@ -140,16 +140,16 @@
          [registry.USDC_ibGBP_POOL, true],
          [registry.USDC_ibCHF_POOL, true],
        ],
-       Object.values(ibTokens).map((t) => [t, false])
+       Object.values(registry.ibTokens).map((t) => [t, false])
      ),
-     [YEARN_DEPLOYER, BOND_TREASURY].concat(
-       Object.values(cTokens),
-       Object.values(ibCrvGauges)
+     [registry.YEARN_DEPLOYER, registry.BOND_TREASURY].concat(
+       Object.values(registry.cTokens),
+       Object.values(registry.ibCrvGauges)
      ),
      block
    );
 
-   await sumTokensAndLPsSharedOwners(balances, Object.values(Kp3rV1Slps).map((t) => [t, true]), [registry.KP3R])
+   await sumTokensAndLPsSharedOwners(balances, Object.values(registry.Kp3rV1Slps).map((t) => [t, true]), [registry.KP3R])
 
    console.log(balances[registry.KP3R.toLowerCase()])
    console.log({balances})
@@ -196,7 +196,7 @@
   * @returns {Promise<TokenPrices>} prices
   */
  const getIbTokenPrices = async ({ block }) => {
-   const ibTokensAddresses = Object.values(ibTokens);
+   const ibTokensAddresses = Object.values(registry.ibTokens);
    const { output } = await sdk.api.abi.multiCall({
      block: block,
      calls: ibTokensAddresses.map((address) => ({
