@@ -6,7 +6,8 @@
  */
 const BigNumber = require("bignumber.js");
 const web3 = require("../config/web3.js");
-const abis = require("../config/abis.js").abis;
+
+const abis = require("./abis.js").abis;
 const registry = require("./registry.js").registry;
 
 const sdk = require("@defillama/sdk");
@@ -16,62 +17,6 @@ const {
 } = require("../helper/unwrapLPs");
 
 const utils = require("../helper/utils");
-
-const userInfo = {
-  inputs: [
-    {
-      internalType: "uint256",
-      name: "",
-      type: "uint256",
-    },
-    {
-      internalType: "address",
-      name: "",
-      type: "address",
-    },
-  ],
-  name: "userInfo",
-  outputs: [
-    {
-      internalType: "uint256",
-      name: "amount",
-      type: "uint256",
-    },
-    {
-      internalType: "uint256",
-      name: "rewardDebt",
-      type: "uint256",
-    },
-  ],
-  stateMutability: "view",
-  type: "function",
-};
-
-const totalBorrows = {
-  constant: true,
-  inputs: [],
-  name: "totalBorrows",
-  outputs: [
-    {
-      internalType: "uint256",
-      name: "",
-      type: "uint256",
-    },
-  ],
-  payable: false,
-  stateMutability: "view",
-  type: "function",
-};
-
-const priceRegistry = [
-  {
-    constant: true,
-    inputs: [{ name: "_forex", type: "address" }],
-    name: "price",
-    outputs: [{ name: "", type: "uint256" }],
-    type: "function",
-  },
-];
 
 // async function staking(timestamp, block) {
 //   const balances = {};
@@ -99,7 +44,7 @@ async function tvl(timestamp, block) {
   const balances = {};
 
   // const { output: sushiToken } = await sdk.api.abi.call({
-  //   abi: userInfo,
+  //   abi: abis.userInfo,
   //   target: MASTERCHEF,
   //   params: [58, YEARN_DEPLOYER],
   //   block,
@@ -169,7 +114,7 @@ async function tvl(timestamp, block) {
 //     calls: cyTokens.map((coin) => ({
 //       target: coin,
 //     })),
-//     abi: totalBorrows,
+//     abi: abis.totalBorrows,
 //   });
 
 // const ib = Object.values(ibTokens);
@@ -206,7 +151,7 @@ const getIbTokenPrices = async ({ block }) => {
       target: ffRegistryAddress,
       params: address,
     })),
-    abi: priceRegistry[0],
+    abi: abis.priceRegistry,
   });
 
   return output.reduce((acc, curr) => {
